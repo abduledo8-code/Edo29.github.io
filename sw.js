@@ -1,10 +1,10 @@
-const CACHE = "guess-number-v1";
+const CACHE = "guess-number-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./ikon-192.png",
+  "./ikon-512.png"
 ];
 
 self.addEventListener("install", event => {

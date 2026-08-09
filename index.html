@@ -120,6 +120,7 @@ h1{font-size:31px;margin:12px 0 5px;letter-spacing:.5px}
       <div class="stat"><small id="attemptLabel">PERCOBAAN</small><strong id="attempts">0</strong></div>
       <div class="stat"><small id="livesLabel">NYAWA</small><strong id="lifeCount">10</strong></div>
       <div class="stat"><small id="gamesLabel">MAIN</small><strong id="games">0</strong></div>
+      <div class="stat"><small id="streakLabel">STREAK</small><strong id="streakCount">0</strong></div>
     </div>
 
     <div class="extra">
@@ -156,18 +157,18 @@ h1{font-size:31px;margin:12px 0 5px;letter-spacing:.5px}
 
 <script>
 const T={
-id:{title:"TEBAK ANGKA",subtitle:"Temukan angka rahasia sebelum waktu habis.",score:"SKOR",best:"REKOR",sec:"DETIK",range:"ANGKA",attempt:"PERCOBAAN",lives:"NYAWA",games:"MAIN",guess:"🎯 TEBAK SEKARANG",good:"Semoga berhasil! 🍀",low:"❄️ Terlalu rendah!",high:"🔥 Terlalu tinggi!",invalid:"⚠️ Masukkan angka yang valid.",win:"🎉 KAMU MENANG!",over:"💔 GAME OVER!",timeout:"⏰ WAKTU HABIS!",answer:"Angka rahasianya",again:"🔄 MAIN LAGI",daily:"🔥 TANTANGAN HARIAN",stats:"📊 STATISTIK",board:"🏆 LEADERBOARD",name:"Nama pemain",close:"TUTUP",statTitle:"Statistik Permainan",boardTitle:"Leaderboard Lokal",played:"Total permainan",wins:"Kemenangan",bestScore:"Skor terbaik",dailyDone:"Tantangan harian selesai!",dailyInfo:"Mode harian: angka 1–500",supportTitle:"💙 Dukung Game Ini",supportText:"Versi gratis tetap bisa dimainkan tanpa pembayaran.",supportBtn:"INFO",ad:"RUANG IKLAN",adText:"Iklan akan muncul di sini setelah situs dipasang jaringan iklan.",footer:"Tebak Angka • Game Mini Internasional"},
-en:{title:"GUESS THE NUMBER",subtitle:"Find the secret number before time runs out.",score:"SCORE",best:"BEST",sec:"SEC",range:"NUMBER",attempt:"ATTEMPTS",lives:"LIVES",games:"GAMES",guess:"🎯 GUESS NOW",good:"Good luck! 🍀",low:"❄️ Too low!",high:"🔥 Too high!",invalid:"⚠️ Enter a valid number.",win:"🎉 YOU WIN!",over:"💔 GAME OVER!",timeout:"⏰ TIME'S UP!",answer:"The secret number",again:"🔄 PLAY AGAIN",daily:"🔥 DAILY CHALLENGE",stats:"📊 STATS",board:"🏆 LEADERBOARD",name:"Player name",close:"CLOSE",statTitle:"Game Statistics",boardTitle:"Local Leaderboard",played:"Games played",wins:"Wins",bestScore:"Best score",dailyDone:"Daily challenge completed!",dailyInfo:"Daily mode: number 1–500",supportTitle:"💙 Support This Game",supportText:"The free version remains playable without payment.",supportBtn:"INFO",ad:"AD SPACE",adText:"Ads can appear here after the website is connected to an ad network.",footer:"Guess The Number • International Mini Game"},
-es:{title:"ADIVINA EL NÚMERO",subtitle:"Encuentra el número secreto antes de que acabe el tiempo.",score:"PUNTOS",best:"RÉCORD",sec:"SEG",range:"NÚMERO",attempt:"INTENTOS",lives:"VIDAS",games:"PARTIDAS",guess:"🎯 ADIVINAR",good:"¡Buena suerte! 🍀",low:"❄️ ¡Demasiado bajo!",high:"🔥 ¡Demasiado alto!",invalid:"⚠️ Introduce un número válido.",win:"🎉 ¡GANASTE!",over:"💔 ¡FIN DEL JUEGO!",timeout:"⏰ ¡TIEMPO AGOTADO!",answer:"El número secreto",again:"🔄 JUGAR DE NUEVO",daily:"🔥 DESAFÍO DIARIO",stats:"📊 ESTADÍSTICAS",board:"🏆 CLASIFICACIÓN",name:"Nombre del jugador",close:"CERRAR",statTitle:"Estadísticas",boardTitle:"Clasificación local",played:"Partidas",wins:"Victorias",bestScore:"Mejor puntuación",dailyDone:"¡Desafío diario completado!",dailyInfo:"Modo diario: número 1–500",footer:"Adivina el Número • Mini Juego Internacional"},
-fr:{title:"DEVINEZ LE NOMBRE",subtitle:"Trouvez le nombre secret avant la fin du temps.",score:"SCORE",best:"RECORD",sec:"SEC",range:"NOMBRE",attempt:"ESSAIS",lives:"VIES",games:"PARTIES",guess:"🎯 DEVINER",good:"Bonne chance ! 🍀",low:"❄️ Trop bas !",high:"🔥 Trop haut !",invalid:"⚠️ Entrez un nombre valide.",win:"🎉 GAGNÉ !",over:"💔 FIN DU JEU !",timeout:"⏰ TEMPS ÉCOULÉ !",answer:"Le nombre secret",again:"🔄 REJOUER",daily:"🔥 DÉFI QUOTIDIEN",stats:"📊 STATISTIQUES",board:"🏆 CLASSEMENT",name:"Nom du joueur",close:"FERMER",statTitle:"Statistiques",boardTitle:"Classement local",played:"Parties",wins:"Victoires",bestScore:"Meilleur score",dailyDone:"Défi quotidien terminé !",dailyInfo:"Mode quotidien : nombre 1–500",footer:"Devinez le Nombre • Mini Jeu International"},
-de:{title:"ERRATE DIE ZAHL",subtitle:"Finde die geheime Zahl, bevor die Zeit abläuft.",score:"PUNKTE",best:"REKORD",sec:"SEK",range:"ZAHL",attempt:"VERSUCHE",lives:"LEBEN",games:"SPIELE",guess:"🎯 RATEN",good:"Viel Glück! 🍀",low:"❄️ Zu niedrig!",high:"🔥 Zu hoch!",invalid:"⚠️ Gib eine gültige Zahl ein.",win:"🎉 GEWONNEN!",over:"💔 GAME OVER!",timeout:"⏰ ZEIT ABGELAUFEN!",answer:"Die geheime Zahl",again:"🔄 NOCHMAL",daily:"🔥 TAGESHERAUSFORDERUNG",stats:"📊 STATISTIK",board:"🏆 BESTENLISTE",name:"Spielername",close:"SCHLIESSEN",statTitle:"Spielstatistik",boardTitle:"Lokale Bestenliste",played:"Gespielt",wins:"Siege",bestScore:"Beste Punktzahl",dailyDone:"Tagesherausforderung geschafft!",dailyInfo:"Tagesmodus: Zahl 1–500",footer:"Errate die Zahl • Internationales Mini-Spiel"},
-pt:{title:"ADIVINHE O NÚMERO",subtitle:"Encontre o número secreto antes que o tempo acabe.",score:"PONTOS",best:"RECORDE",sec:"SEG",range:"NÚMERO",attempt:"TENTATIVAS",lives:"VIDAS",games:"JOGOS",guess:"🎯 ADIVINHAR",good:"Boa sorte! 🍀",low:"❄️ Muito baixo!",high:"🔥 Muito alto!",invalid:"⚠️ Digite um número válido.",win:"🎉 VOCÊ VENCEU!",over:"💔 FIM DE JOGO!",timeout:"⏰ TEMPO ESGOTADO!",answer:"O número secreto",again:"🔄 JOGAR NOVAMENTE",daily:"🔥 DESAFIO DIÁRIO",stats:"📊 ESTATÍSTICAS",board:"🏆 RANKING",name:"Nome do jogador",close:"FECHAR",statTitle:"Estatísticas",boardTitle:"Ranking local",played:"Partidas",wins:"Vitórias",bestScore:"Melhor pontuação",dailyDone:"Desafio diário concluído!",dailyInfo:"Modo diário: número 1–500",footer:"Adivinhe o Número • Mini Jogo Internacional"},
-ja:{title:"数字を当てよう",subtitle:"時間切れになる前に秘密の数字を見つけよう。",score:"スコア",best:"記録",sec:"秒",range:"数字",attempt:"試行",lives:"残り",games:"ゲーム",guess:"🎯 予想する",good:"頑張って！🍀",low:"❄️ もっと大きな数字です",high:"🔥 もっと小さな数字です",invalid:"⚠️ 正しい数字を入力してください。",win:"🎉 クリア！",over:"💔 ゲームオーバー！",timeout:"⏰ 時間切れ！",answer:"秘密の数字",again:"🔄 もう一度",daily:"🔥 デイリーチャレンジ",stats:"📊 統計",board:"🏆 ランキング",name:"プレイヤー名",close:"閉じる",statTitle:"ゲーム統計",boardTitle:"ローカルランキング",played:"プレイ数",wins:"勝利",bestScore:"最高スコア",dailyDone:"デイリーチャレンジ達成！",dailyInfo:"デイリーモード：1–500",footer:"数字を当てよう • 国際ミニゲーム"},
-ko:{title:"숫자 맞히기",subtitle:"시간이 끝나기 전에 비밀 숫자를 찾아보세요.",score:"점수",best:"최고 기록",sec:"초",range:"숫자",attempt:"시도",lives:"목숨",games:"게임",guess:"🎯 맞히기",good:"행운을 빕니다! 🍀",low:"❄️ 더 높은 숫자입니다",high:"🔥 더 낮은 숫자입니다",invalid:"⚠️ 올바른 숫자를 입력하세요.",win:"🎉 성공!",over:"💔 게임 오버!",timeout:"⏰ 시간 초과!",answer:"비밀 숫자",again:"🔄 다시 플레이",daily:"🔥 오늘의 도전",stats:"📊 통계",board:"🏆 순위표",name:"플레이어 이름",close:"닫기",statTitle:"게임 통계",boardTitle:"로컬 순위표",played:"플레이 횟수",wins:"승리",bestScore:"최고 점수",dailyDone:"오늘의 도전 완료!",dailyInfo:"일일 모드: 1–500",footer:"숫자 맞히기 • 국제 미니 게임"}
+id:{title:"TEBAK ANGKA",subtitle:"Temukan angka rahasia sebelum waktu habis.",score:"SKOR",best:"REKOR",sec:"DETIK",range:"ANGKA",attempt:"PERCOBAAN",lives:"NYAWA",games:"MAIN",guess:"🎯 TEBAK SEKARANG",good:"Semoga berhasil! 🍀",low:"❄️ Terlalu rendah!",high:"🔥 Terlalu tinggi!",invalid:"⚠️ Masukkan angka yang valid.",win:"🎉 KAMU MENANG!",over:"💔 GAME OVER!",timeout:"⏰ WAKTU HABIS!",answer:"Angka rahasianya",again:"🔄 MAIN LAGI",daily:"🔥 TANTANGAN HARIAN",stats:"📊 STATISTIK",board:"🏆 LEADERBOARD",name:"Nama pemain",close:"TUTUP",statTitle:"Statistik Permainan",boardTitle:"Leaderboard Lokal",played:"Total permainan",wins:"Kemenangan",bestScore:"Skor terbaik",dailyDone:"Tantangan harian selesai!",dailyInfo:"Mode harian: angka 1–500",supportTitle:"💙 Dukung Game Ini",supportText:"Versi gratis tetap bisa dimainkan tanpa pembayaran.",supportBtn:"INFO",ad:"RUANG IKLAN",adText:"Iklan akan muncul di sini setelah situs dipasang jaringan iklan.",streak:"STREAK",bestStreak:"STREAK TERBAIK",footer:"Tebak Angka • Game Mini Internasional"},
+en:{title:"GUESS THE NUMBER",subtitle:"Find the secret number before time runs out.",score:"SCORE",best:"BEST",sec:"SEC",range:"NUMBER",attempt:"ATTEMPTS",lives:"LIVES",games:"GAMES",guess:"🎯 GUESS NOW",good:"Good luck! 🍀",low:"❄️ Too low!",high:"🔥 Too high!",invalid:"⚠️ Enter a valid number.",win:"🎉 YOU WIN!",over:"💔 GAME OVER!",timeout:"⏰ TIME'S UP!",answer:"The secret number",again:"🔄 PLAY AGAIN",daily:"🔥 DAILY CHALLENGE",stats:"📊 STATS",board:"🏆 LEADERBOARD",name:"Player name",close:"CLOSE",statTitle:"Game Statistics",boardTitle:"Local Leaderboard",played:"Games played",wins:"Wins",bestScore:"Best score",dailyDone:"Daily challenge completed!",dailyInfo:"Daily mode: number 1–500",supportTitle:"💙 Support This Game",supportText:"The free version remains playable without payment.",supportBtn:"INFO",ad:"AD SPACE",adText:"Ads can appear here after the website is connected to an ad network.",streak:"STREAK",bestStreak:"BEST STREAK",footer:"Guess The Number • International Mini Game"},
+es:{title:"ADIVINA EL NÚMERO",subtitle:"Encuentra el número secreto antes de que acabe el tiempo.",score:"PUNTOS",best:"RÉCORD",sec:"SEG",range:"NÚMERO",attempt:"INTENTOS",lives:"VIDAS",games:"PARTIDAS",guess:"🎯 ADIVINAR",good:"¡Buena suerte! 🍀",low:"❄️ ¡Demasiado bajo!",high:"🔥 ¡Demasiado alto!",invalid:"⚠️ Introduce un número válido.",win:"🎉 ¡GANASTE!",over:"💔 ¡FIN DEL JUEGO!",timeout:"⏰ ¡TIEMPO AGOTADO!",answer:"El número secreto",again:"🔄 JUGAR DE NUEVO",daily:"🔥 DESAFÍO DIARIO",stats:"📊 ESTADÍSTICAS",board:"🏆 CLASIFICACIÓN",name:"Nombre del jugador",close:"CERRAR",statTitle:"Estadísticas",boardTitle:"Clasificación local",played:"Partidas",wins:"Victorias",bestScore:"Mejor puntuación",dailyDone:"¡Desafío diario completado!",dailyInfo:"Modo diario: número 1–500",streak:"RACHA",bestStreak:"MEJOR RACHA",footer:"Adivina el Número • Mini Juego Internacional"},
+fr:{title:"DEVINEZ LE NOMBRE",subtitle:"Trouvez le nombre secret avant la fin du temps.",score:"SCORE",best:"RECORD",sec:"SEC",range:"NOMBRE",attempt:"ESSAIS",lives:"VIES",games:"PARTIES",guess:"🎯 DEVINER",good:"Bonne chance ! 🍀",low:"❄️ Trop bas !",high:"🔥 Trop haut !",invalid:"⚠️ Entrez un nombre valide.",win:"🎉 GAGNÉ !",over:"💔 FIN DU JEU !",timeout:"⏰ TEMPS ÉCOULÉ !",answer:"Le nombre secret",again:"🔄 REJOUER",daily:"🔥 DÉFI QUOTIDIEN",stats:"📊 STATISTIQUES",board:"🏆 CLASSEMENT",name:"Nom du joueur",close:"FERMER",statTitle:"Statistiques",boardTitle:"Classement local",played:"Parties",wins:"Victoires",bestScore:"Meilleur score",dailyDone:"Défi quotidien terminé !",dailyInfo:"Mode quotidien : nombre 1–500",streak:"SÉRIE",bestStreak:"MEILLEURE SÉRIE",footer:"Devinez le Nombre • Mini Jeu International"},
+de:{title:"ERRATE DIE ZAHL",subtitle:"Finde die geheime Zahl, bevor die Zeit abläuft.",score:"PUNKTE",best:"REKORD",sec:"SEK",range:"ZAHL",attempt:"VERSUCHE",lives:"LEBEN",games:"SPIELE",guess:"🎯 RATEN",good:"Viel Glück! 🍀",low:"❄️ Zu niedrig!",high:"🔥 Zu hoch!",invalid:"⚠️ Gib eine gültige Zahl ein.",win:"🎉 GEWONNEN!",over:"💔 GAME OVER!",timeout:"⏰ ZEIT ABGELAUFEN!",answer:"Die geheime Zahl",again:"🔄 NOCHMAL",daily:"🔥 TAGESHERAUSFORDERUNG",stats:"📊 STATISTIK",board:"🏆 BESTENLISTE",name:"Spielername",close:"SCHLIESSEN",statTitle:"Spielstatistik",boardTitle:"Lokale Bestenliste",played:"Gespielt",wins:"Siege",bestScore:"Beste Punktzahl",dailyDone:"Tagesherausforderung geschafft!",dailyInfo:"Tagesmodus: Zahl 1–500",streak:"SERIE",bestStreak:"BESTE SERIE",footer:"Errate die Zahl • Internationales Mini-Spiel"},
+pt:{title:"ADIVINHE O NÚMERO",subtitle:"Encontre o número secreto antes que o tempo acabe.",score:"PONTOS",best:"RECORDE",sec:"SEG",range:"NÚMERO",attempt:"TENTATIVAS",lives:"VIDAS",games:"JOGOS",guess:"🎯 ADIVINHAR",good:"Boa sorte! 🍀",low:"❄️ Muito baixo!",high:"🔥 Muito alto!",invalid:"⚠️ Digite um número válido.",win:"🎉 VOCÊ VENCEU!",over:"💔 FIM DE JOGO!",timeout:"⏰ TEMPO ESGOTADO!",answer:"O número secreto",again:"🔄 JOGAR NOVAMENTE",daily:"🔥 DESAFIO DIÁRIO",stats:"📊 ESTATÍSTICAS",board:"🏆 RANKING",name:"Nome do jogador",close:"FECHAR",statTitle:"Estatísticas",boardTitle:"Ranking local",played:"Partidas",wins:"Vitórias",bestScore:"Melhor pontuação",dailyDone:"Desafio diário concluído!",dailyInfo:"Modo diário: número 1–500",streak:"SEQUÊNCIA",bestStreak:"MELHOR SEQUÊNCIA",footer:"Adivinhe o Número • Mini Jogo Internacional"},
+ja:{title:"数字を当てよう",subtitle:"時間切れになる前に秘密の数字を見つけよう。",score:"スコア",best:"記録",sec:"秒",range:"数字",attempt:"試行",lives:"残り",games:"ゲーム",guess:"🎯 予想する",good:"頑張って！🍀",low:"❄️ もっと大きな数字です",high:"🔥 もっと小さな数字です",invalid:"⚠️ 正しい数字を入力してください。",win:"🎉 クリア！",over:"💔 ゲームオーバー！",timeout:"⏰ 時間切れ！",answer:"秘密の数字",again:"🔄 もう一度",daily:"🔥 デイリーチャレンジ",stats:"📊 統計",board:"🏆 ランキング",name:"プレイヤー名",close:"閉じる",statTitle:"ゲーム統計",boardTitle:"ローカルランキング",played:"プレイ数",wins:"勝利",bestScore:"最高スコア",dailyDone:"デイリーチャレンジ達成！",dailyInfo:"デイリーモード：1–500",streak:"連勝",bestStreak:"最高連勝",footer:"数字を当てよう • 国際ミニゲーム"},
+ko:{title:"숫자 맞히기",subtitle:"시간이 끝나기 전에 비밀 숫자를 찾아보세요.",score:"점수",best:"최고 기록",sec:"초",range:"숫자",attempt:"시도",lives:"목숨",games:"게임",guess:"🎯 맞히기",good:"행운을 빕니다! 🍀",low:"❄️ 더 높은 숫자입니다",high:"🔥 더 낮은 숫자입니다",invalid:"⚠️ 올바른 숫자를 입력하세요.",win:"🎉 성공!",over:"💔 게임 오버!",timeout:"⏰ 시간 초과!",answer:"비밀 숫자",again:"🔄 다시 플레이",daily:"🔥 오늘의 도전",stats:"📊 통계",board:"🏆 순위표",name:"플레이어 이름",close:"닫기",statTitle:"게임 통계",boardTitle:"로컬 순위표",played:"플레이 횟수",wins:"승리",bestScore:"최고 점수",dailyDone:"오늘의 도전 완료!",dailyInfo:"일일 모드: 1–500",streak:"연승",bestStreak:"최고 연승",footer:"숫자 맞히기 • 국제 미니 게임"}
 };
 
 const levels={easy:{max:50,lives:12,time:90},normal:{max:100,lives:10,time:60},hard:{max:500,lives:8,time:45},extreme:{max:1000,lives:6,time:30}};
-let lang=localStorage.getItem("gnLang")||"id",level="normal",secret=0,max=100,lives=10,attempts=0,score=1000,time=60,timer=null,done=false,combo=0,dailyMode=false;
+let lang=localStorage.getItem("gnLang")||"id",level="normal",secret=0,max=100,lives=10,attempts=0,score=1000,time=60,timer=null,done=false,combo=0,currentStreak=Number(localStorage.getItem("gnStreak")||0),bestStreak=Number(localStorage.getItem("gnBestStreak")||0),dailyMode=false;
 
 const $=id=>document.getElementById(id);
 function tr(){return T[lang]}
@@ -176,7 +177,7 @@ function setLanguage(){lang=$("language").value;localStorage.setItem("gnLang",la
 function applyText(){
   const t=tr();$("title").textContent=t.title;$("subtitle").textContent=t.subtitle;$("scoreLabel").textContent=t.score;
   $("bestLabel").textContent=t.best;$("sec").textContent=t.sec;$("attemptLabel").textContent=t.attempt;$("livesLabel").textContent=t.lives;
-  $("gamesLabel").textContent=t.games;$("guessBtn").textContent=t.guess;$("dailyBtn").textContent=t.daily;$("statsBtn").textContent=t.stats;
+  $("gamesLabel").textContent=t.games;$("streakLabel").textContent=t.streak||T.en.streak;$("guessBtn").textContent=t.guess;$("dailyBtn").textContent=t.daily;$("statsBtn").textContent=t.stats;
   $("boardBtn").textContent=t.board;$("restartBtn").textContent=t.again;$("playerName").placeholder=t.name;$("closeBtn").textContent=t.close;
   $("supportTitle").textContent=t.supportTitle||T.id.supportTitle;$("supportText").textContent=t.supportText||T.id.supportText;
   $("supportBtn").textContent=t.supportBtn||T.id.supportBtn;$("adTop").querySelector("span").textContent=t.ad||T.id.ad;
@@ -212,7 +213,7 @@ function start(){
 }
 function renderAll(){
   $("attempts").textContent=attempts;$("lifeCount").textContent=lives;$("score").textContent=score;
-  $("combo").textContent=combo>1?"🔥 COMBO x"+combo:"";renderLives();renderTimer();updateRange();updateBest();updateGames()
+  $("streakCount").textContent=currentStreak;$("combo").textContent=combo>1?"🔥 COMBO x"+combo:"";renderLives();renderTimer();updateRange();updateBest();updateGames()
 }
 function renderLives(){
   const total=dailyMode?10:levels[level].lives;$("lives").textContent="❤️".repeat(lives)+"🖤".repeat(Math.max(0,total-lives))
@@ -228,29 +229,40 @@ function checkGuess(){
   if(n===secret){
     combo++;score+=Math.max(100,time*10)+combo*50;correct=true;
     $("message").innerHTML=t.win+"<br>"+t.answer+": <b>"+secret+"</b><br>🏆 "+score;
-    saveBest();saveStats(true);saveDaily();finish();return
+    saveBest();updateStreak(true);saveStats(true);saveDaily();finish();return
   }
   combo=0;score=Math.max(0,score-50);
-  if(lives<=0){$("message").innerHTML=t.over+"<br>"+t.answer+": <b>"+secret+"</b>";saveStats(false);finish();return}
+  if(lives<=0){$("message").innerHTML=t.over+"<br>"+t.answer+": <b>"+secret+"</b>";updateStreak(false);saveStats(false);finish();return}
   $("message").textContent=n<secret?t.low:t.high;$("guess").value="";$("guess").focus();renderAll()
+}
+function updateStreak(won){
+  if(won){
+    currentStreak++;
+    if(currentStreak>bestStreak) bestStreak=currentStreak;
+  }else{
+    currentStreak=0;
+  }
+  localStorage.setItem("gnStreak",currentStreak);
+  localStorage.setItem("gnBestStreak",bestStreak);
+  renderAll();
 }
 function saveBest(){const key="gnBest_"+level,old=Number(localStorage.getItem(key)||0);if(score>old)localStorage.setItem(key,score);updateBest()}
 function saveDaily(){if(dailyMode){const s=getStats();s.daily=new Date().toISOString().slice(0,10);localStorage.setItem("gnStats",JSON.stringify(s))}}
 function finish(type){
   if(done)return;done=true;clearInterval(timer);$("guess").disabled=true;$("restartBtn").style.display="block";
-  if(type==="timeout"){$("message").innerHTML=tr().timeout+"<br>"+tr().answer+": <b>"+secret+"</b>";saveStats(false)}
+  if(type==="timeout"){$("message").innerHTML=tr().timeout+"<br>"+tr().answer+": <b>"+secret+"</b>";updateStreak(false);saveStats(false)}
   renderAll()
 }
 function restart(){dailyMode?dailyChallenge():start()}
 function openStats(){
   const s=getStats(),t=tr();$("modalTitle").textContent=t.statTitle;
-  $("modalBody").innerHTML=`<div class="row"><span>${t.played}</span><b>${s.played}</b></div><div class="row"><span>${t.wins}</span><b>${s.wins}</b></div><div class="row"><span>${t.bestScore}</span><b>${Math.max(Number(localStorage.getItem("gnBest_easy")||0),Number(localStorage.getItem("gnBest_normal")||0),Number(localStorage.getItem("gnBest_hard")||0),Number(localStorage.getItem("gnBest_extreme")||0),Number(localStorage.getItem("gnBest_daily")||0))}</b></div><div class="row"><span>${t.daily}</span><b>${s.daily===new Date().toISOString().slice(0,10)?"✓":"—"}</b></div>`;
+  $("modalBody").innerHTML=`<div class="row"><span>${t.played}</span><b>${s.played}</b></div><div class="row"><span>${t.wins}</span><b>${s.wins}</b></div><div class="row"><span>${t.bestScore}</span><b>${Math.max(Number(localStorage.getItem("gnBest_easy")||0),Number(localStorage.getItem("gnBest_normal")||0),Number(localStorage.getItem("gnBest_hard")||0),Number(localStorage.getItem("gnBest_extreme")||0),Number(localStorage.getItem("gnBest_daily")||0))}</b></div><div class="row"><span>${t.bestStreak||T.en.bestStreak}</span><b>${bestStreak}</b></div><div class="row"><span>${t.daily}</span><b>${s.daily===new Date().toISOString().slice(0,10)?"✓":"—"}</b></div>`;
   $("modal").classList.add("show")
 }
 function openBoard(){
   const t=tr(),rows=["easy","normal","hard","extreme","daily"].map(x=>({mode:x,score:Number(localStorage.getItem("gnBest_"+x)||0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5);
   $("modalTitle").textContent=t.boardTitle;
-  $("modalBody").innerHTML=rows.length?rows.map((r,i)=>`<div class="row"><span class="rank">#${i+1}</span><span>${r.mode.toUpperCase()}</span><b>${r.score}</b></div>`).join(""):"<div class='row'>Belum ada skor. Main dan pecahkan rekor!</div>";
+  $("modalBody").innerHTML=rows.length?rows.map((r,i)=>`<div class="row"><span class="rank">#${i+1}</span><span>${r.mode.toUpperCase()}</span><b>${r.score}</b></div>`).join(""):`<div class='row'>${lang==="en"?"No scores yet. Play and set a record!":lang==="ja"?"まだスコアがありません。プレイして記録を作ろう！":lang==="ko"?"아직 점수가 없습니다. 플레이하여 기록을 세워보세요!":"Belum ada skor. Main dan pecahkan rekor!"}</div>`;
   $("modal").classList.add("show")
 }
 function showSupport(){

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Guess The Number</title>
+<style>
+:root{
+  --bg:#07111f;--card:#101d31;--card2:#172943;--line:#263b5b;
+  --text:#f7fbff;--muted:#91a5c0;--accent:#55d6ff;--green:#39e58c;
+  --danger:#ff5577;--gold:#ffd35a;--purple:#a98cff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;font-family:Arial,sans-serif;color:var(--text);
+  background:radial-gradient(circle at 20% 10%,#12365c 0,transparent 35%),
+             radial-gradient(circle at 90% 80%,#183b59 0,transparent 35%),var(--bg);
+  display:flex;justify-content:center;padding:18px 14px;
+}
+.app{width:100%;max-width:430px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:8px}
+.lang{flex:1;max-width:190px;background:#13243a;border:1px solid var(--line);color:#fff;border-radius:14px;padding:10px 12px;font-size:14px;outline:none}
+.iconbtn{width:42px;height:42px;border:1px solid var(--line);border-radius:13px;background:#13243a;color:#fff;font-size:19px}
+.hero{text-align:center;margin:8px 0 18px}
+.logo{width:74px;height:74px;margin:auto;border-radius:24px;display:grid;place-items:center;background:linear-gradient(145deg,#16395c,#0d1d32);border:1px solid #315171;box-shadow:0 12px 35px #0008;font-size:42px}
+h1{font-size:31px;margin:12px 0 5px;letter-spacing:.5px}
+.subtitle{margin:0;color:var(--muted);font-size:14px}
+.namebox{background:#0f2035;border:1px solid var(--line);border-radius:17px;padding:12px;margin-bottom:12px}
+.namebox input{width:100%;height:46px;border:0;border-radius:12px;background:#091625;color:#fff;text-align:center;font-size:16px;outline:none}
+.scorecard{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#152942,#0e1b2e);border:1px solid var(--line);border-radius:22px;padding:16px 18px;margin-bottom:14px}
+.scorebox small{display:block;color:var(--muted);font-size:11px;letter-spacing:1px}
+.scorebox strong{font-size:30px;margin-top:3px;display:block}
+.best{color:var(--gold);text-align:right}
+.timer{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) 0deg,#223652 0deg);position:relative;margin:2px auto 12px}
+.timer:after{content:"";position:absolute;inset:7px;border-radius:50%;background:#0c1829}
+.timer span{position:relative;z-index:1;font-size:25px;font-weight:bold}
+.timer small{position:absolute;z-index:2;top:57px;font-size:9px;color:var(--muted)}
+.range{text-align:center;color:var(--muted);font-size:14px;margin-bottom:10px}
+.combo{text-align:center;color:var(--gold);font-size:13px;font-weight:bold;min-height:20px}
+.lives{text-align:center;letter-spacing:4px;font-size:20px;margin-bottom:15px}
+.panel{background:rgba(16,29,49,.92);border:1px solid var(--line);border-radius:25px;padding:18px;box-shadow:0 20px 60px #0007}
+.input{width:100%;height:64px;border-radius:17px;border:1px solid #304866;background:#0b1728;color:#fff;text-align:center;font-size:30px;outline:none}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #55d6ff22}
+.guess{width:100%;height:56px;margin-top:10px;border:0;border-radius:16px;background:linear-gradient(135deg,#55d6ff,#4b8dff);color:#06101d;font-size:17px;font-weight:800}
+.message{min-height:45px;text-align:center;padding:12px 4px;font-weight:bold;color:#dcecff}
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:5px}
+.levels button,.secondary{border:1px solid var(--line);background:#13233a;color:#aebed2;border-radius:12px;padding:10px 3px;font-size:11px;font-weight:bold}
+.levels button.active{background:#dff8ff;color:#092034;border-color:#55d6ff}
+.daily{width:100%;margin-top:9px;border:1px solid #554a83;background:#201b3d;color:#d9d1ff;border-radius:13px;padding:11px;font-weight:bold}
+.daily.active{background:#342967;border-color:var(--purple)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:#0d1b2d;border:1px solid var(--line);border-radius:14px;padding:11px;text-align:center}
+.stat small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}
+.stat strong{font-size:17px}
+.extra{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.secondary{height:44px;font-size:12px}
+.restart{display:none;width:100%;margin-top:10px;height:48px;border:0;border-radius:14px;background:var(--green);color:#062015;font-weight:800;font-size:15px}
+.footer{text-align:center;color:#647993;font-size:11px;margin-top:15px}
+.modal{display:none;position:fixed;inset:0;background:#000a;z-index:20;padding:18px;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.sheet{width:100%;max-width:430px;background:#101d31;border:1px solid var(--line);border-radius:25px 25px 0 0;padding:20px;max-height:80vh;overflow:auto}
+.sheet h2{text-align:center;margin:0 0 14px}
+.close{width:100%;height:44px;border:0;border-radius:13px;background:#203551;color:#fff;font-weight:bold;margin-top:14px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:12px;border-bottom:1px solid #223650}
+.row:last-child{border-bottom:0}
+.rank{color:var(--gold);font-weight:bold}
+.flash{animation:flash .45s ease}
+@keyframes flash{50%{transform:scale(1.025);box-shadow:0 0 30px #55d6ff55}}
+@media(max-width:360px){h1{font-size:27px}.scorebox strong{font-size:26px}.timer{width:82px;height:82px}}
+.adslot{margin-top:14px;min-height:76px;border:1px dashed #35506f;border-radius:16px;background:#0b1728;color:#607995;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px}.adslot span{font-size:10px;letter-spacing:2px;font-weight:bold}.adslot small{font-size:10px;padding:0 12px}.support{margin-top:12px;padding:13px;border:1px solid #304866;border-radius:15px;background:linear-gradient(135deg,#101e33,#0c1829);display:flex;align-items:center;justify-content:space-between;gap:10px}.support b{display:block;font-size:13px}.support small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.support button{border:1px solid #355271;background:#152b47;color:#bfeaff;border-radius:10px;padding:8px 11px;font-weight:bold}</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <select class="lang" id="language" onchange="setLanguage()">
+      <option value="id">🇮🇩 Indonesia</option><option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option><option value="pt">🇵🇹 Português</option>
+      <option value="ja">🇯🇵 日本語</option><option value="ko">🇰🇷 한국어</option>
+    </select>
+    <button class="iconbtn" onclick="restart()">↻</button>
+  </div>
+
+  <div class="hero">
+    <div class="logo">🎯</div>
+    <h1 id="title">TEBAK ANGKA</h1>
+    <p class="subtitle" id="subtitle">Temukan angka rahasia sebelum waktu habis.</p>
+  </div>
+
+  <div class="namebox">
+    <input id="playerName" maxlength="16" placeholder="Nama pemain">
+  </div>
+
+  <div class="scorecard">
+    <div class="scorebox"><small id="scoreLabel">SKOR</small><strong id="score">1000</strong></div>
+    <div class="timer" id="timerRing"><span id="timer">60</span><small id="sec">DETIK</small></div>
+    <div class="scorebox best"><small id="bestLabel">REKOR</small><strong id="best">0</strong></div>
+  </div>
+
+  <div class="range" id="range">ANGKA 1 — 100</div>
+  <div class="combo" id="combo"></div>
+  <div class="lives" id="lives">❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️</div>
+
+  <div class="panel" id="panel">
+    <input class="input" id="guess" type="number" inputmode="numeric" placeholder="?" autocomplete="off">
+    <button class="guess" id="guessBtn" onclick="checkGuess()">🎯 TEBAK SEKARANG</button>
+    <div class="message" id="message">Semoga berhasil! 🍀</div>
+
+    <div class="levels">
+      <button id="easy" onclick="setLevel('easy')">🟢 MUDAH</button>
+      <button id="normal" class="active" onclick="setLevel('normal')">🔵 NORMAL</button>
+      <button id="hard" onclick="setLevel('hard')">🟠 SULIT</button>
+      <button id="extreme" onclick="setLevel('extreme')">🔴 EKSTREM</button>
+    </div>
+
+    <button class="daily" id="dailyBtn" onclick="dailyChallenge()">🔥 TANTANGAN HARIAN</button>
+
+    <div class="stats">
+      <div class="stat"><small id="attemptLabel">PERCOBAAN</small><strong id="attempts">0</strong></div>
+      <div class="stat"><small id="livesLabel">NYAWA</small><strong id="lifeCount">10</strong></div>
+      <div class="stat"><small id="gamesLabel">MAIN</small><strong id="games">0</strong></div>
+    </div>
+
+    <div class="extra">
+      <button class="secondary" onclick="openStats()" id="statsBtn">📊 STATISTIK</button>
+      <button class="secondary" onclick="openBoard()" id="boardBtn">🏆 LEADERBOARD</button>
+    </div>
+
+    <div class="support">
+      <div>
+        <b id="supportTitle">💙 Dukung Game Ini</b>
+        <small id="supportText">Versi gratis tetap bisa dimainkan tanpa pembayaran.</small>
+      </div>
+      <button onclick="showSupport()" id="supportBtn">INFO</button>
+    </div>
+
+    <button class="restart" id="restartBtn" onclick="restart()">🔄 MAIN LAGI</button>
+  </div>
+
+  <div class="adslot" id="adTop">
+  <span>RUANG IKLAN</span>
+  <small>Iklan akan muncul di sini setelah situs dipasang jaringan iklan.</small>
+</div>
+
+<div class="footer" id="footer">Tebak Angka • Game Mini Internasional</div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h2 id="modalTitle">Statistik</h2>
+    <div id="modalBody"></div>
+    <button class="close" onclick="closeModal()" id="closeBtn">TUTUP</button>
+  </div>
+</div>
+
+<script>
+const T={
+id:{title:"TEBAK ANGKA",subtitle:"Temukan angka rahasia sebelum waktu habis.",score:"SKOR",best:"REKOR",sec:"DETIK",range:"ANGKA",attempt:"PERCOBAAN",lives:"NYAWA",games:"MAIN",guess:"🎯 TEBAK SEKARANG",good:"Semoga berhasil! 🍀",low:"❄️ Terlalu rendah!",high:"🔥 Terlalu tinggi!",invalid:"⚠️ Masukkan angka yang valid.",win:"🎉 KAMU MENANG!",over:"💔 GAME OVER!",timeout:"⏰ WAKTU HABIS!",answer:"Angka rahasianya",again:"🔄 MAIN LAGI",daily:"🔥 TANTANGAN HARIAN",stats:"📊 STATISTIK",board:"🏆 LEADERBOARD",name:"Nama pemain",close:"TUTUP",statTitle:"Statistik Permainan",boardTitle:"Leaderboard Lokal",played:"Total permainan",wins:"Kemenangan",bestScore:"Skor terbaik",dailyDone:"Tantangan harian selesai!",dailyInfo:"Mode harian: angka 1–500",supportTitle:"💙 Dukung Game Ini",supportText:"Versi gratis tetap bisa dimainkan tanpa pembayaran.",supportBtn:"INFO",ad:"RUANG IKLAN",adText:"Iklan akan muncul di sini setelah situs dipasang jaringan iklan.",footer:"Tebak Angka • Game Mini Internasional"},
+en:{title:"GUESS THE NUMBER",subtitle:"Find the secret number before time runs out.",score:"SCORE",best:"BEST",sec:"SEC",range:"NUMBER",attempt:"ATTEMPTS",lives:"LIVES",games:"GAMES",guess:"🎯 GUESS NOW",good:"Good luck! 🍀",low:"❄️ Too low!",high:"🔥 Too high!",invalid:"⚠️ Enter a valid number.",win:"🎉 YOU WIN!",over:"💔 GAME OVER!",timeout:"⏰ TIME'S UP!",answer:"The secret number",again:"🔄 PLAY AGAIN",daily:"🔥 DAILY CHALLENGE",stats:"📊 STATS",board:"🏆 LEADERBOARD",name:"Player name",close:"CLOSE",statTitle:"Game Statistics",boardTitle:"Local Leaderboard",played:"Games played",wins:"Wins",bestScore:"Best score",dailyDone:"Daily challenge completed!",dailyInfo:"Daily mode: number 1–500",supportTitle:"💙 Support This Game",supportText:"The free version remains playable without payment.",supportBtn:"INFO",ad:"AD SPACE",adText:"Ads can appear here after the website is connected to an ad network.",footer:"Guess The Number • International Mini Game"},
+es:{title:"ADIVINA EL NÚMERO",subtitle:"Encuentra el número secreto antes de que acabe el tiempo.",score:"PUNTOS",best:"RÉCORD",sec:"SEG",range:"NÚMERO",attempt:"INTENTOS",lives:"VIDAS",games:"PARTIDAS",guess:"🎯 ADIVINAR",good:"¡Buena suerte! 🍀",low:"❄️ ¡Demasiado bajo!",high:"🔥 ¡Demasiado alto!",invalid:"⚠️ Introduce un número válido.",win:"🎉 ¡GANASTE!",over:"💔 ¡FIN DEL JUEGO!",timeout:"⏰ ¡TIEMPO AGOTADO!",answer:"El número secreto",again:"🔄 JUGAR DE NUEVO",daily:"🔥 DESAFÍO DIARIO",stats:"📊 ESTADÍSTICAS",board:"🏆 CLASIFICACIÓN",name:"Nombre del jugador",close:"CERRAR",statTitle:"Estadísticas",boardTitle:"Clasificación local",played:"Partidas",wins:"Victorias",bestScore:"Mejor puntuación",dailyDone:"¡Desafío diario completado!",dailyInfo:"Modo diario: número 1–500",footer:"Adivina el Número • Mini Juego Internacional"},
+fr:{title:"DEVINEZ LE NOMBRE",subtitle:"Trouvez le nombre secret avant la fin du temps.",score:"SCORE",best:"RECORD",sec:"SEC",range:"NOMBRE",attempt:"ESSAIS",lives:"VIES",games:"PARTIES",guess:"🎯 DEVINER",good:"Bonne chance ! 🍀",low:"❄️ Trop bas !",high:"🔥 Trop haut !",invalid:"⚠️ Entrez un nombre valide.",win:"🎉 GAGNÉ !",over:"💔 FIN DU JEU !",timeout:"⏰ TEMPS ÉCOULÉ !",answer:"Le nombre secret",again:"🔄 REJOUER",daily:"🔥 DÉFI QUOTIDIEN",stats:"📊 STATISTIQUES",board:"🏆 CLASSEMENT",name:"Nom du joueur",close:"FERMER",statTitle:"Statistiques",boardTitle:"Classement local",played:"Parties",wins:"Victoires",bestScore:"Meilleur score",dailyDone:"Défi quotidien terminé !",dailyInfo:"Mode quotidien : nombre 1–500",footer:"Devinez le Nombre • Mini Jeu International"},
+de:{title:"ERRATE DIE ZAHL",subtitle:"Finde die geheime Zahl, bevor die Zeit abläuft.",score:"PUNKTE",best:"REKORD",sec:"SEK",range:"ZAHL",attempt:"VERSUCHE",lives:"LEBEN",games:"SPIELE",guess:"🎯 RATEN",good:"Viel Glück! 🍀",low:"❄️ Zu niedrig!",high:"🔥 Zu hoch!",invalid:"⚠️ Gib eine gültige Zahl ein.",win:"🎉 GEWONNEN!",over:"💔 GAME OVER!",timeout:"⏰ ZEIT ABGELAUFEN!",answer:"Die geheime Zahl",again:"🔄 NOCHMAL",daily:"🔥 TAGESHERAUSFORDERUNG",stats:"📊 STATISTIK",board:"🏆 BESTENLISTE",name:"Spielername",close:"SCHLIESSEN",statTitle:"Spielstatistik",boardTitle:"Lokale Bestenliste",played:"Gespielt",wins:"Siege",bestScore:"Beste Punktzahl",dailyDone:"Tagesherausforderung geschafft!",dailyInfo:"Tagesmodus: Zahl 1–500",footer:"Errate die Zahl • Internationales Mini-Spiel"},
+pt:{title:"ADIVINHE O NÚMERO",subtitle:"Encontre o número secreto antes que o tempo acabe.",score:"PONTOS",best:"RECORDE",sec:"SEG",range:"NÚMERO",attempt:"TENTATIVAS",lives:"VIDAS",games:"JOGOS",guess:"🎯 ADIVINHAR",good:"Boa sorte! 🍀",low:"❄️ Muito baixo!",high:"🔥 Muito alto!",invalid:"⚠️ Digite um número válido.",win:"🎉 VOCÊ VENCEU!",over:"💔 FIM DE JOGO!",timeout:"⏰ TEMPO ESGOTADO!",answer:"O número secreto",again:"🔄 JOGAR NOVAMENTE",daily:"🔥 DESAFIO DIÁRIO",stats:"📊 ESTATÍSTICAS",board:"🏆 RANKING",name:"Nome do jogador",close:"FECHAR",statTitle:"Estatísticas",boardTitle:"Ranking local",played:"Partidas",wins:"Vitórias",bestScore:"Melhor pontuação",dailyDone:"Desafio diário concluído!",dailyInfo:"Modo diário: número 1–500",footer:"Adivinhe o Número • Mini Jogo Internacional"},
+ja:{title:"数字を当てよう",subtitle:"時間切れになる前に秘密の数字を見つけよう。",score:"スコア",best:"記録",sec:"秒",range:"数字",attempt:"試行",lives:"残り",games:"ゲーム",guess:"🎯 予想する",good:"頑張って！🍀",low:"❄️ もっと大きな数字です",high:"🔥 もっと小さな数字です",invalid:"⚠️ 正しい数字を入力してください。",win:"🎉 クリア！",over:"💔 ゲームオーバー！",timeout:"⏰ 時間切れ！",answer:"秘密の数字",again:"🔄 もう一度",daily:"🔥 デイリーチャレンジ",stats:"📊 統計",board:"🏆 ランキング",name:"プレイヤー名",close:"閉じる",statTitle:"ゲーム統計",boardTitle:"ローカルランキング",played:"プレイ数",wins:"勝利",bestScore:"最高スコア",dailyDone:"デイリーチャレンジ達成！",dailyInfo:"デイリーモード：1–500",footer:"数字を当てよう • 国際ミニゲーム"},
+ko:{title:"숫자 맞히기",subtitle:"시간이 끝나기 전에 비밀 숫자를 찾아보세요.",score:"점수",best:"최고 기록",sec:"초",range:"숫자",attempt:"시도",lives:"목숨",games:"게임",guess:"🎯 맞히기",good:"행운을 빕니다! 🍀",low:"❄️ 더 높은 숫자입니다",high:"🔥 더 낮은 숫자입니다",invalid:"⚠️ 올바른 숫자를 입력하세요.",win:"🎉 성공!",over:"💔 게임 오버!",timeout:"⏰ 시간 초과!",answer:"비밀 숫자",again:"🔄 다시 플레이",daily:"🔥 오늘의 도전",stats:"📊 통계",board:"🏆 순위표",name:"플레이어 이름",close:"닫기",statTitle:"게임 통계",boardTitle:"로컬 순위표",played:"플레이 횟수",wins:"승리",bestScore:"최고 점수",dailyDone:"오늘의 도전 완료!",dailyInfo:"일일 모드: 1–500",footer:"숫자 맞히기 • 국제 미니 게임"}
+};
+
+const levels={easy:{max:50,lives:12,time:90},normal:{max:100,lives:10,time:60},hard:{max:500,lives:8,time:45},extreme:{max:1000,lives:6,time:30}};
+let lang=localStorage.getItem("gnLang")||"id",level="normal",secret=0,max=100,lives=10,attempts=0,score=1000,time=60,timer=null,done=false,combo=0,dailyMode=false;
+
+const $=id=>document.getElementById(id);
+function tr(){return T[lang]}
+function player(){return ($("playerName").value.trim()||"Player").slice(0,16)}
+function setLanguage(){lang=$("language").value;localStorage.setItem("gnLang",lang);applyText()}
+function applyText(){
+  const t=tr();$("title").textContent=t.title;$("subtitle").textContent=t.subtitle;$("scoreLabel").textContent=t.score;
+  $("bestLabel").textContent=t.best;$("sec").textContent=t.sec;$("attemptLabel").textContent=t.attempt;$("livesLabel").textContent=t.lives;
+  $("gamesLabel").textContent=t.games;$("guessBtn").textContent=t.guess;$("dailyBtn").textContent=t.daily;$("statsBtn").textContent=t.stats;
+  $("boardBtn").textContent=t.board;$("restartBtn").textContent=t.again;$("playerName").placeholder=t.name;$("closeBtn").textContent=t.close;
+  $("supportTitle").textContent=t.supportTitle||T.id.supportTitle;$("supportText").textContent=t.supportText||T.id.supportText;
+  $("supportBtn").textContent=t.supportBtn||T.id.supportBtn;$("adTop").querySelector("span").textContent=t.ad||T.id.ad;
+  $("adTop").querySelector("small").textContent=t.adText||T.id.adText;
+  updateRange();updateBest();updateGames();
+}
+function updateRange(){$("range").textContent=tr().range.toUpperCase()+" 1 — "+max}
+function updateBest(){$("best").textContent=localStorage.getItem("gnBest_"+level)||0}
+function getStats(){return JSON.parse(localStorage.getItem("gnStats")||'{"played":0,"wins":0,"daily":"", "scores":[]}')}
+function saveStats(won){
+  const s=getStats();s.played++;if(won)s.wins++;localStorage.setItem("gnStats",JSON.stringify(s));updateGames()
+}
+function updateGames(){$("games").textContent=getStats().played}
+function setLevel(x){
+  dailyMode=false;$("dailyBtn").classList.remove("active");level=x;
+  document.querySelectorAll(".levels button").forEach(b=>b.classList.remove("active"));$(x).classList.add("active");start()
+}
+function seededDaily(){
+  const d=new Date().toISOString().slice(0,10);let n=0;for(const c of d)n=(n*31+c.charCodeAt(0))%499;
+  return n+1
+}
+function dailyChallenge(){
+  dailyMode=true;level="daily";document.querySelectorAll(".levels button").forEach(b=>b.classList.remove("active"));$("dailyBtn").classList.add("active");
+  clearInterval(timer);max=500;lives=10;time=60;attempts=0;score=1500;done=false;combo=0;secret=seededDaily();
+  renderAll();$("message").textContent=tr().dailyInfo;$("guess").value="";$("guess").disabled=false;$("restartBtn").style.display="none";
+  $("best").textContent=localStorage.getItem("gnBest_daily")||0;timer=setInterval(()=>{time--;renderTimer();if(time<=0)finish("timeout")},1000)
+}
+function start(){
+  clearInterval(timer);dailyMode=false;$("dailyBtn").classList.remove("active");
+  const s=levels[level];max=s.max;lives=s.lives;time=s.time;attempts=0;score=1000;done=false;combo=0;secret=Math.floor(Math.random()*max)+1;
+  renderAll();$("message").textContent=tr().good;$("guess").value="";$("guess").disabled=false;$("restartBtn").style.display="none";
+  timer=setInterval(()=>{time--;renderTimer();if(time<=0)finish("timeout")},1000)
+}
+function renderAll(){
+  $("attempts").textContent=attempts;$("lifeCount").textContent=lives;$("score").textContent=score;
+  $("combo").textContent=combo>1?"🔥 COMBO x"+combo:"";renderLives();renderTimer();updateRange();updateBest();updateGames()
+}
+function renderLives(){
+  const total=dailyMode?10:levels[level].lives;$("lives").textContent="❤️".repeat(lives)+"🖤".repeat(Math.max(0,total-lives))
+}
+function renderTimer(){
+  $("timer").textContent=time;const total=dailyMode?60:levels[level].time,deg=Math.max(0,time/total)*360;
+  $("timerRing").style.background=`conic-gradient(var(--accent) ${deg}deg,#223652 ${deg}deg)`
+}
+function checkGuess(){
+  if(done)return;const n=Number($("guess").value),t=tr();
+  if(!Number.isInteger(n)||n<1||n>max){$("message").textContent=t.invalid+" ("+max+")";return}
+  attempts++;lives--;let correct=false;
+  if(n===secret){
+    combo++;score+=Math.max(100,time*10)+combo*50;correct=true;
+    $("message").innerHTML=t.win+"<br>"+t.answer+": <b>"+secret+"</b><br>🏆 "+score;
+    saveBest();saveStats(true);saveDaily();finish();return
+  }
+  combo=0;score=Math.max(0,score-50);
+  if(lives<=0){$("message").innerHTML=t.over+"<br>"+t.answer+": <b>"+secret+"</b>";saveStats(false);finish();return}
+  $("message").textContent=n<secret?t.low:t.high;$("guess").value="";$("guess").focus();renderAll()
+}
+function saveBest(){const key="gnBest_"+level,old=Number(localStorage.getItem(key)||0);if(score>old)localStorage.setItem(key,score);updateBest()}
+function saveDaily(){if(dailyMode){const s=getStats();s.daily=new Date().toISOString().slice(0,10);localStorage.setItem("gnStats",JSON.stringify(s))}}
+function finish(type){
+  if(done)return;done=true;clearInterval(timer);$("guess").disabled=true;$("restartBtn").style.display="block";
+  if(type==="timeout"){$("message").innerHTML=tr().timeout+"<br>"+tr().answer+": <b>"+secret+"</b>";saveStats(false)}
+  renderAll()
+}
+function restart(){dailyMode?dailyChallenge():start()}
+function openStats(){
+  const s=getStats(),t=tr();$("modalTitle").textContent=t.statTitle;
+  $("modalBody").innerHTML=`<div class="row"><span>${t.played}</span><b>${s.played}</b></div><div class="row"><span>${t.wins}</span><b>${s.wins}</b></div><div class="row"><span>${t.bestScore}</span><b>${Math.max(Number(localStorage.getItem("gnBest_easy")||0),Number(localStorage.getItem("gnBest_normal")||0),Number(localStorage.getItem("gnBest_hard")||0),Number(localStorage.getItem("gnBest_extreme")||0),Number(localStorage.getItem("gnBest_daily")||0))}</b></div><div class="row"><span>${t.daily}</span><b>${s.daily===new Date().toISOString().slice(0,10)?"✓":"—"}</b></div>`;
+  $("modal").classList.add("show")
+}
+function openBoard(){
+  const t=tr(),rows=["easy","normal","hard","extreme","daily"].map(x=>({mode:x,score:Number(localStorage.getItem("gnBest_"+x)||0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5);
+  $("modalTitle").textContent=t.boardTitle;
+  $("modalBody").innerHTML=rows.length?rows.map((r,i)=>`<div class="row"><span class="rank">#${i+1}</span><span>${r.mode.toUpperCase()}</span><b>${r.score}</b></div>`).join(""):"<div class='row'>Belum ada skor. Main dan pecahkan rekor!</div>";
+  $("modal").classList.add("show")
+}
+function showSupport(){
+  const t=tr();
+  $("modalTitle").textContent=t.supportTitle||T.id.supportTitle;
+  $("modalBody").innerHTML=`<div class="row"><span>${t.supportText||T.id.supportText}</span></div>
+  <div class="row"><span>💡</span><b>Monetisasi aman</b></div>
+  <div class="row"><span>📢</span><b>Slot iklan siap dipasang</b></div>
+  <div class="row"><span>🔒</span><b>Tidak meminta pembayaran dari pemain</b></div>`;
+  $("modal").classList.add("show")
+}
+function closeModal(){$("modal").classList.remove("show")}
+$("guess").addEventListener("keydown",e=>{if(e.key==="Enter")checkGuess()});
+const savedName=localStorage.getItem("gnName")||"";$("playerName").value=savedName;$("playerName").addEventListener("input",()=>localStorage.setItem("gnName",$("playerName").value));
+$("language").value=lang;applyText();start();
+</script>
+</body>
+</html>

@@ -217,9 +217,17 @@ function applyText(){
 }
 function updateRange(){$("range").textContent=tr().range.toUpperCase()+" 1 — "+max}
 function updateBest(){$("best").textContent=localStorage.getItem("gnBest_"+level)||0}
-function getStats(){return JSON.parse(localStorage.getItem("gnStats")||'{"played":0,"wins":0,"daily":"", "scores":[]}')}
+function getStats(){
+  const base={played:0,wins:0,daily:"",scores:[],streak:0,bestStreak:0};
+  try{return Object.assign(base,JSON.parse(localStorage.getItem("gnStats")||"{}"))}
+  catch(e){return base}
+}
 function saveStats(won){
-  const s=getStats();s.played++;if(won)s.wins++;localStorage.setItem("gnStats",JSON.stringify(s));updateGames()
+  const s=getStats();
+  s.played++;
+  if(won){s.wins++;s.streak=Number(s.streak||0)+1;s.bestStreak=Math.max(Number(s.bestStreak||0),s.streak)}
+  else{s.streak=0}
+  localStorage.setItem("gnStats",JSON.stringify(s));updateGames();renderProgress()
 }
 function updateGames(){$("games").textContent=getStats().played}
 function setLevel(x){
@@ -261,12 +269,14 @@ function checkGuess(){
   if(n===secret){
     combo++;
     const beforeLevel=currentPlayerLevel();
-    const bonus=Math.max(100,time*10)+combo*50+levelBonus();
+    const nextWins=statsData().wins+1;
+    const bonusLevel=Math.min(10,1+Math.floor(nextWins/3));
+    const bonus=Math.max(100,time*10)+combo*50+(bonusLevel*25);
     score+=bonus;
     saveBest();saveStats(true);
     const afterLevel=currentPlayerLevel();
     const up=afterLevel>beforeLevel?(" 🎉 "+e.levelUp+" "+afterLevel+"!"):("");
-    $("message").innerHTML=t.win+"<br>"+t.answer+": <b>"+secret+"</b><br>🏆 "+score+"<br>🔥 "+e.streak+" x"+statsData().streak+" · ⭐ "+e.bonus+": +"+levelBonus()+up;
+    $("message").innerHTML=t.win+"<br>"+t.answer+": <b>"+secret+"</b><br>🏆 "+score+"<br>🔥 "+e.streak+" x"+statsData().streak+" · ⭐ "+e.bonus+": +"+(bonusLevel*25)+up;
     finish();return;
   }
   combo=0;score=Math.max(0,score-50);

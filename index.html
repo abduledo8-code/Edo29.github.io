@@ -67,8 +67,8 @@ h1{font-size:31px;margin:12px 0 5px;letter-spacing:.5px}
 .flash{animation:flash .45s ease}
 @keyframes flash{50%{transform:scale(1.025);box-shadow:0 0 30px #55d6ff55}}
 @media(max-width:360px){h1{font-size:27px}.scorebox strong{font-size:26px}.timer{width:82px;height:82px}}
-.adslot{margin-top:14px;min-height:76px;border:1px dashed #35506f;border-radius:16px;background:#0b1728;color:#607995;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px}.adslot span{font-size:10px;letter-spacing:2px;font-weight:bold}.adslot small{font-size:10px;padding:0 12px}.support{margin-top:12px;padding:13px;border:1px solid #304866;border-radius:15px;background:linear-gradient(135deg,#101e33,#0c1829);display:flex;align-items:center;justify-content:space-between;gap:10px}.support b{display:block;font-size:13px}.support small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.support button{border:1px solid #355271;background:#152b47;color:#bfeaff;border-radius:10px;padding:8px 11px;font-weight:bold}</style>
-</head>
+.adslot{margin-top:14px;min-height:76px;border:1px dashed #35506f;border-radius:16px;background:#0b1728;color:#607995;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px}.adslot span{font-size:10px;letter-spacing:2px;font-weight:bold}.adslot small{font-size:10px;padding:0 12px}.support{margin-top:12px;padding:13px;border:1px solid #304866;border-radius:15px;background:linear-gradient(135deg,#101e33,#0c1829);display:flex;align-items:center;justify-content:space-between;gap:10px}.support b{display:block;font-size:13px}.support small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.support button{border:1px solid #355271;background:#152b47;color:#bfeaff;border-radius:10px;padding:8px 11px;font-weight:bold}.combo{min-height:22px;margin:4px 0;font-weight:700}</style>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#07111f"><link rel="apple-touch-icon" href="ikon-192.png"></head>
 <body>
 
 <div class="app">
@@ -100,7 +100,8 @@ h1{font-size:31px;margin:12px 0 5px;letter-spacing:.5px}
 
   <div class="range" id="range">ANGKA 1 — 100</div>
   <div class="combo" id="combo"></div>
-  <div class="combo" id="playerLevel"></div>
+  <div class="combo" id="levelDisplay"></div>
+  <div class="combo" id="streakDisplay"></div>
   <div class="lives" id="lives">❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️</div>
 
   <div class="panel" id="panel">
@@ -169,32 +170,50 @@ ko:{title:"숫자 맞히기",subtitle:"시간이 끝나기 전에 비밀 숫자�
 
 const levels={easy:{max:50,lives:12,time:90},normal:{max:100,lives:10,time:60},hard:{max:500,lives:8,time:45},extreme:{max:1000,lives:6,time:30}};
 let lang=localStorage.getItem("gnLang")||"id",level="normal",secret=0,max=100,lives=10,attempts=0,score=1000,time=60,timer=null,done=false,combo=0,dailyMode=false;
-const levelWords={
-  id:"LEVEL",en:"LEVEL",es:"NIVEL",fr:"NIVEAU",de:"LEVEL",pt:"NÍVEL",ja:"レベル",ko:"레벨"
-};
-function progressionLevel(){
-  const wins=getStats().wins;
-  return Math.min(10, 1 + Math.floor(wins/3));
-}
-function renderProgression(){
-  const el=$("playerLevel");
-  if(el) el.textContent="⭐ "+(levelWords[lang]||"LEVEL")+" "+progressionLevel();
-}
 
+
+const EXTRA={
+id:{level:"LEVEL",streak:"STREAK",bestStreak:"Streak terbaik",levelUp:"Naik level!",bonus:"Bonus level",streakWin:"Streak kemenangan",dailyDone:"Tantangan harian selesai!",dailyAlready:"Tantangan hari ini sudah dimainkan."},
+en:{level:"LEVEL",streak:"STREAK",bestStreak:"Best streak",levelUp:"Level up!",bonus:"Level bonus",streakWin:"Win streak",dailyDone:"Daily challenge completed!",dailyAlready:"Today's challenge has already been played."},
+es:{level:"NIVEL",streak:"RACHA",bestStreak:"Mejor racha",levelUp:"¡Subiste de nivel!",bonus:"Bono de nivel",streakWin:"Racha de victorias",dailyDone:"¡Desafío diario completado!",dailyAlready:"El desafío de hoy ya fue jugado."},
+fr:{level:"NIVEAU",streak:"SÉRIE",bestStreak:"Meilleure série",levelUp:"Niveau supérieur !",bonus:"Bonus de niveau",streakWin:"Série de victoires",dailyDone:"Défi quotidien terminé !",dailyAlready:"Le défi d'aujourd'hui a déjà été joué."},
+de:{level:"LEVEL",streak:"SIEGESSERIE",bestStreak:"Beste Serie",levelUp:"Level aufgestiegen!",bonus:"Level-Bonus",streakWin:"Siegesserie",dailyDone:"Tagesherausforderung geschafft!",dailyAlready:"Die heutige Herausforderung wurde bereits gespielt."},
+pt:{level:"NÍVEL",streak:"SEQUÊNCIA",bestStreak:"Melhor sequência",levelUp:"Subiu de nível!",bonus:"Bônus de nível",streakWin:"Sequência de vitórias",dailyDone:"Desafio diário concluído!",dailyAlready:"O desafio de hoje já foi jogado."},
+ja:{level:"レベル",streak:"連勝",bestStreak:"最高連勝",levelUp:"レベルアップ！",bonus:"レベルボーナス",streakWin:"連勝記録",dailyDone:"デイリーチャレンジ達成！",dailyAlready:"今日のチャレンジはプレイ済みです。"},
+ko:{level:"레벨",streak:"연승",bestStreak:"최고 연승",levelUp:"레벨 업!",bonus:"레벨 보너스",streakWin:"연승 기록",dailyDone:"오늘의 도전 완료!",dailyAlready:"오늘의 도전은 이미 플레이했습니다."}
+};
+const LEVEL_CAP=10;
+function statsData(){
+  const d={played:0,wins:0,daily:"",scores:[],streak:0,bestStreak:0,level:1,dailyDate:""};
+  try{return Object.assign(d,JSON.parse(localStorage.getItem("gnStats")||"{}"))}catch(e){return d}
+}
+function currentPlayerLevel(){return Math.min(LEVEL_CAP,1+Math.floor(statsData().wins/3))}
+function renderProgress(){
+  const s=statsData(),e=EXTRA[lang]||EXTRA.en;
+  $("levelDisplay").textContent="⭐ "+e.level+" "+currentPlayerLevel();
+  $("streakDisplay").textContent=s.streak>0?"🔥 "+e.streak+" x"+s.streak:"";
+}
+function levelBonus(){return currentPlayerLevel()*25}
 
 const $=id=>document.getElementById(id);
 function tr(){return T[lang]}
 function player(){return ($("playerName").value.trim()||"Player").slice(0,16)}
-function setLanguage(){lang=$("language").value;localStorage.setItem("gnLang",lang);applyText();renderProgression()}
+function setLanguage(){lang=$("language").value;localStorage.setItem("gnLang",lang);applyText()}
 function applyText(){
-  const t=tr();$("title").textContent=t.title;$("subtitle").textContent=t.subtitle;$("scoreLabel").textContent=t.score;
+  const t=tr(),e=EXTRA[lang]||EXTRA.en;
+  $("title").textContent=t.title;$("subtitle").textContent=t.subtitle;$("scoreLabel").textContent=t.score;
   $("bestLabel").textContent=t.best;$("sec").textContent=t.sec;$("attemptLabel").textContent=t.attempt;$("livesLabel").textContent=t.lives;
   $("gamesLabel").textContent=t.games;$("guessBtn").textContent=t.guess;$("dailyBtn").textContent=t.daily;$("statsBtn").textContent=t.stats;
   $("boardBtn").textContent=t.board;$("restartBtn").textContent=t.again;$("playerName").placeholder=t.name;$("closeBtn").textContent=t.close;
   $("supportTitle").textContent=t.supportTitle||T.id.supportTitle;$("supportText").textContent=t.supportText||T.id.supportText;
   $("supportBtn").textContent=t.supportBtn||T.id.supportBtn;$("adTop").querySelector("span").textContent=t.ad||T.id.ad;
   $("adTop").querySelector("small").textContent=t.adText||T.id.adText;
-  updateRange();updateBest();updateGames();renderProgression();
+  $("footer").textContent=t.footer||T.id.footer;
+  $("easy").textContent="🟢 "+({"id":"MUDAH","en":"EASY","es":"FÁCIL","fr":"FACILE","de":"EINFACH","pt":"FÁCIL","ja":"かんたん","ko":"쉬움"})[lang];
+  $("normal").textContent="🔵 "+({"id":"NORMAL","en":"NORMAL","es":"NORMAL","fr":"NORMAL","de":"NORMAL","pt":"NORMAL","ja":"ノーマル","ko":"보통"})[lang];
+  $("hard").textContent="🟠 "+({"id":"SULIT","en":"HARD","es":"DIFÍCIL","fr":"DIFFICILE","de":"SCHWER","pt":"DIFÍCIL","ja":"むずかしい","ko":"어려움"})[lang];
+  $("extreme").textContent="🔴 "+({"id":"EKSTREM","en":"EXTREME","es":"EXTREMO","fr":"EXTRÊME","de":"EXTREM","pt":"EXTREMO","ja":"エクストリーム","ko":"극한"})[lang];
+  updateRange();updateBest();updateGames();renderProgress();
 }
 function updateRange(){$("range").textContent=tr().range.toUpperCase()+" 1 — "+max}
 function updateBest(){$("best").textContent=localStorage.getItem("gnBest_"+level)||0}
@@ -225,7 +244,7 @@ function start(){
 }
 function renderAll(){
   $("attempts").textContent=attempts;$("lifeCount").textContent=lives;$("score").textContent=score;
-  $("combo").textContent=combo>1?"🔥 COMBO x"+combo:"";renderLives();renderTimer();updateRange();updateBest();updateGames()
+  $("combo").textContent=combo>1?"🔥 COMBO x"+combo:"";renderLives();renderTimer();updateRange();updateBest();updateGames();renderProgress()
 }
 function renderLives(){
   const total=dailyMode?10:levels[level].lives;$("lives").textContent="❤️".repeat(lives)+"🖤".repeat(Math.max(0,total-lives))
@@ -235,17 +254,27 @@ function renderTimer(){
   $("timerRing").style.background=`conic-gradient(var(--accent) ${deg}deg,#223652 ${deg}deg)`
 }
 function checkGuess(){
-  if(done)return;const n=Number($("guess").value),t=tr();
+  if(done)return;
+  const n=Number($("guess").value),t=tr(),e=EXTRA[lang]||EXTRA.en;
   if(!Number.isInteger(n)||n<1||n>max){$("message").textContent=t.invalid+" ("+max+")";return}
-  attempts++;lives--;let correct=false;
+  attempts++;lives--;
   if(n===secret){
-    combo++;const pLevel=progressionLevel();const levelBonus=pLevel*25;score+=Math.max(100,time*10)+combo*50+levelBonus;correct=true;
-    $("message").innerHTML=t.win+"<br>"+t.answer+": <b>"+secret+"</b><br>🏆 "+score;
-    saveBest();saveStats(true);saveDaily();renderProgression();finish();return
+    combo++;
+    const beforeLevel=currentPlayerLevel();
+    const bonus=Math.max(100,time*10)+combo*50+levelBonus();
+    score+=bonus;
+    saveBest();saveStats(true);
+    const afterLevel=currentPlayerLevel();
+    const up=afterLevel>beforeLevel?(" 🎉 "+e.levelUp+" "+afterLevel+"!"):("");
+    $("message").innerHTML=t.win+"<br>"+t.answer+": <b>"+secret+"</b><br>🏆 "+score+"<br>🔥 "+e.streak+" x"+statsData().streak+" · ⭐ "+e.bonus+": +"+levelBonus()+up;
+    finish();return;
   }
   combo=0;score=Math.max(0,score-50);
-  if(lives<=0){$("message").innerHTML=t.over+"<br>"+t.answer+": <b>"+secret+"</b>";saveStats(false);finish();return}
-  $("message").textContent=n<secret?t.low:t.high;$("guess").value="";$("guess").focus();renderAll()
+  if(lives<=0){
+    $("message").innerHTML=t.over+"<br>"+t.answer+": <b>"+secret+"</b>";
+    saveStats(false);finish();return;
+  }
+  $("message").textContent=n<secret?t.low:t.high;$("guess").value="";$("guess").focus();renderAll();
 }
 function saveBest(){const key="gnBest_"+level,old=Number(localStorage.getItem(key)||0);if(score>old)localStorage.setItem(key,score);updateBest()}
 function saveDaily(){if(dailyMode){const s=getStats();s.daily=new Date().toISOString().slice(0,10);localStorage.setItem("gnStats",JSON.stringify(s))}}
@@ -256,8 +285,16 @@ function finish(type){
 }
 function restart(){dailyMode?dailyChallenge():start()}
 function openStats(){
-  const s=getStats(),t=tr();$("modalTitle").textContent=t.statTitle;
-  $("modalBody").innerHTML=`<div class="row"><span>${t.played}</span><b>${s.played}</b></div><div class="row"><span>${t.wins}</span><b>${s.wins}</b></div><div class="row"><span>${t.bestScore}</span><b>${Math.max(Number(localStorage.getItem("gnBest_easy")||0),Number(localStorage.getItem("gnBest_normal")||0),Number(localStorage.getItem("gnBest_hard")||0),Number(localStorage.getItem("gnBest_extreme")||0),Number(localStorage.getItem("gnBest_daily")||0))}</b></div><div class="row"><span>${t.daily}</span><b>${s.daily===new Date().toISOString().slice(0,10)?"✓":"—"}</b></div>`;
+  const s=statsData(),t=tr(),e=EXTRA[lang]||EXTRA.en;
+  $("modalTitle").textContent=t.statTitle;
+  const best=Math.max(Number(localStorage.getItem("gnBest_easy")||0),Number(localStorage.getItem("gnBest_normal")||0),Number(localStorage.getItem("gnBest_hard")||0),Number(localStorage.getItem("gnBest_extreme")||0),Number(localStorage.getItem("gnBest_daily")||0));
+  $("modalBody").innerHTML=
+  `<div class="row"><span>${t.played}</span><b>${s.played}</b></div>
+   <div class="row"><span>${t.wins}</span><b>${s.wins}</b></div>
+   <div class="row"><span>${e.level}</span><b>${currentPlayerLevel()}</b></div>
+   <div class="row"><span>${e.bestStreak}</span><b>${s.bestStreak}</b></div>
+   <div class="row"><span>${t.bestScore}</span><b>${best}</b></div>
+   <div class="row"><span>${t.daily}</span><b>${s.daily===new Date().toISOString().slice(0,10)?"✓":"—"}</b></div>`;
   $("modal").classList.add("show")
 }
 function openBoard(){
@@ -278,7 +315,7 @@ function showSupport(){
 function closeModal(){$("modal").classList.remove("show")}
 $("guess").addEventListener("keydown",e=>{if(e.key==="Enter")checkGuess()});
 const savedName=localStorage.getItem("gnName")||"";$("playerName").value=savedName;$("playerName").addEventListener("input",()=>localStorage.setItem("gnName",$("playerName").value));
-$("language").value=lang;applyText();start();
+$("language").value=lang;applyText();renderProgress();start();
 </script>
 </body>
 </html>
